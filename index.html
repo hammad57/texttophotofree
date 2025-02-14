@@ -67,7 +67,7 @@
             const apiUrl = `https://api-inference.huggingface.co/models/${modelId}`;
 
             try {
-                resultDiv.innerHTML = "Generating...";
+                resultDiv.innerHTML = "Please Wait Image Generating...";
 
                 const response = await fetch(apiUrl, {
                     method: "POST",
