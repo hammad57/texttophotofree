@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Background Remover</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #1f1c2c, #928dab);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: #2c2c54;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+      text-align: center;
+      width: 100%;
+      max-width: 450px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      font-size: 24px;
+      letter-spacing: 1px;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .upload-label {
+      display: inline-block;
+      background-color: #6a89cc;
+      color: white;
+      padding: 12px 25px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-bottom: 20px;
+      transition: background 0.3s;
+    }
+
+    .upload-label:hover {
+      background-color: #4a69bd;
+    }
+
+    #preview {
+      max-width: 100%;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    button {
+      background-color: #f6b93b;
+      color: #2d3436;
+      padding: 12px 25px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #e17055;
+      color: #fff;
+    }
+
+    #result {
+      margin-top: 20px;
+    }
+
+    #outputImage {
+      max-width: 100%;
+      border-radius: 10px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>AI Background Remover</h1>
+    <label for="imageUpload" class="upload-label">Choose Image</label>
+    <input type="file" id="imageUpload" accept="image/*" />
+    <br />
+    <img id="preview" src="#" alt="Image Preview" />
+    <br />
+    <button onclick="removeBackground()">Remove Background</button>
+    <div id="result">
+      <img id="outputImage" src="#" alt="Background Removed" />
+    </div>
+  </div>
+
+  <script>
+    const imageUpload = document.getElementById("imageUpload");
+    const preview = document.getElementById("preview");
+
+    imageUpload.addEventListener("change", function () {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          preview.src = e.target.result;
+          preview.style.display = "block";
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    function removeBackground() {
+      alert("Here you can integrate remove.bg API or your own AI model.");
+      // For example:
+      // 1. Upload image to server/backend
+      // 2. Server processes image with AI
+      // 3. Return processed image
+      // 4. Show in #outputImage
+
+      // Example placeholder:
+      document.getElementById("outputImage").src = preview.src; // For demo
+      document.getElementById("outputImage").style.display = "block";
+    }
+  </script>
+</body>
+</html>
