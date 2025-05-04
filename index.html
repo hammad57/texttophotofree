@@ -1,116 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VOC Text to Image Generator (Free)</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f0f0f0;
-        }
-        .container {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        input, textarea, button {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        #result {
-            margin-top: 20px;
-            text-align: center;
-        }
-        img {
-            max-width: 100%;
-            margin-top: 20px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VOC Text to Image Generator (Free)</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f0f0f0;
+    }
+    .container {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input, textarea, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    #result {
+      margin-top: 20px;
+      text-align: center;
+    }
+    img {
+      max-width: 100%;
+      margin-top: 20px;
+    }
+    small {
+      color: gray;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>VOC Text to Image Generator (Free)</h1>
-        
-        <!-- Optional API input -->
-        <label for="apiKey">Enter Your API Token (optional):</label>
-        <input type="password" id="apiKey" placeholder="Leave blank to use default">
+  <div class="container">
+    <h1>VOC Text to Image Generator (Free)</h1>
 
-        <label for="prompt">Prompt:</label>
-        <textarea id="prompt" rows="3" placeholder="Enter your text prompt here..."></textarea>
+    <!-- ✅ API Key Input Field -->
+    <label for="apiKey">Enter Your HuggingFace API Key (Optional):</label>
+    <input type="text" id="apiKey" placeholder="Leave blank to use default VOC key">
+    <small>We recommend using your own key if you're getting 'rate limit' errors.</small>
 
-        <label for="negative_prompt">Negative Prompt:</label>
-        <textarea id="negative_prompt" rows="2" placeholder="What to exclude from the image..."></textarea>
+    <label for="prompt">Prompt:</label>
+    <textarea id="prompt" rows="3" placeholder="Enter your text prompt here..."></textarea>
 
-        <button onclick="generateImage()">Generate Image</button>
-        
-        <div id="result">
-            <!-- Generated image will appear here -->
-        </div>
+    <label for="negative_prompt">Negative Prompt:</label>
+    <textarea id="negative_prompt" rows="2" placeholder="What to exclude from the image..."></textarea>
+
+    <button onclick="generateImage()">Generate Image</button>
+
+    <div id="result">
+      <!-- Generated image will appear here -->
     </div>
+  </div>
 
-    <script>
-        async function generateImage() {
-            const defaultApiKey = "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";  // آپ کی default key
-            const userApiKey = document.getElementById('apiKey').value.trim();
-            const apiKey = userApiKey !== "" ? userApiKey : defaultApiKey;
+  <script>
+    async function generateImage() {
+      const defaultApiKey = "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";  // ✅ آپ کی default API key
+      const userApiKey = document.getElementById('apiKey').value.trim();
+      const apiKey = userApiKey !== "" ? userApiKey : defaultApiKey;
 
-            const prompt = document.getElementById('prompt').value;
-            const negative_prompt = document.getElementById('negative_prompt').value;
-            const resultDiv = document.getElementById('result');
+      const prompt = document.getElementById('prompt').value;
+      const negative_prompt = document.getElementById('negative_prompt').value;
+      const resultDiv = document.getElementById('result');
 
-            const modelId = "stabilityai/stable-diffusion-xl-base-1.0";
-            const apiUrl = `https://api-inference.huggingface.co/models/${modelId}`;
+      const modelId = "stabilityai/stable-diffusion-xl-base-1.0";
+      const apiUrl = `https://api-inference.huggingface.co/models/${modelId}`;
 
-            try {
-                if (!prompt) {
-                    resultDiv.innerHTML = "❌ Please enter a prompt.";
-                    return;
-                }
+      if (!prompt) {
+        resultDiv.innerHTML = "❌ Please enter a prompt.";
+        return;
+      }
 
-                resultDiv.innerHTML = "⏳ Please Wait — Generating Image...";
+      resultDiv.innerHTML = "⏳ Please wait — generating image...";
 
-                const response = await fetch(apiUrl, {
-                    method: "POST",
-                    headers: {
-                        "Authorization": `Bearer ${apiKey}`,
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        inputs: prompt,
-                        parameters: {
-                            negative_prompt: negative_prompt,
-                            num_inference_steps: 50,
-                            guidance_scale: 7.5
-                        }
-                    }),
-                });
-
-                if (!response.ok) {
-                    throw new Error(`API error: ${response.statusText}`);
-                }
-
-                const imageBlob = await response.blob();
-                const imageUrl = URL.createObjectURL(imageBlob);
-
-                resultDiv.innerHTML = `
-                    <h3>Result:</h3>
-                    <img src="${imageUrl}" alt="Generated image">
-                    <br>
-                    <a href="${imageUrl}" download="generated-image.png">Download Image</a>
-                `;
-
-            } catch (error) {
-                resultDiv.innerHTML = `❌ Error: ${error.message}`;
+      try {
+        const response = await fetch(apiUrl, {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${apiKey}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            inputs: prompt,
+            parameters: {
+              negative_prompt: negative_prompt,
+              num_inference_steps: 50,
+              guidance_scale: 7.5
             }
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status} - ${response.statusText}`);
         }
-    </script>
+
+        const imageBlob = await response.blob();
+        const imageUrl = URL.createObjectURL(imageBlob);
+
+        resultDiv.innerHTML = `
+          <h3>Result:</h3>
+          <img src="${imageUrl}" alt="Generated image">
+          <br>
+          <a href="${imageUrl}" download="generated-image.png">Download Image</a>
+        `;
+      } catch (error) {
+        resultDiv.innerHTML = `❌ Error: ${error.message}`;
+      }
+    }
+  </script>
 </body>
 </html>
