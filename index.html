@@ -39,9 +39,9 @@
     <div class="container">
         <h1>VOC Text to Image Generator (Free)</h1>
         
-        <!-- یہاں آپ کا API ٹوکن پہلے سے ڈالا گیا ہے -->
-        <label for="apiKey">API Token:</label>
-        <input type="password" id="apiKey" value="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" readonly>
+        <!-- Optional API input -->
+        <label for="apiKey">Enter Your API Token (optional):</label>
+        <input type="password" id="apiKey" placeholder="Leave blank to use default">
 
         <label for="prompt">Prompt:</label>
         <textarea id="prompt" rows="3" placeholder="Enter your text prompt here..."></textarea>
@@ -58,7 +58,10 @@
 
     <script>
         async function generateImage() {
-            const apiKey = document.getElementById('apiKey').value;
+            const defaultApiKey = "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";  // آپ کی default key
+            const userApiKey = document.getElementById('apiKey').value.trim();
+            const apiKey = userApiKey !== "" ? userApiKey : defaultApiKey;
+
             const prompt = document.getElementById('prompt').value;
             const negative_prompt = document.getElementById('negative_prompt').value;
             const resultDiv = document.getElementById('result');
@@ -67,7 +70,12 @@
             const apiUrl = `https://api-inference.huggingface.co/models/${modelId}`;
 
             try {
-                resultDiv.innerHTML = "Please Wait Image Generating...";
+                if (!prompt) {
+                    resultDiv.innerHTML = "❌ Please enter a prompt.";
+                    return;
+                }
+
+                resultDiv.innerHTML = "⏳ Please Wait — Generating Image...";
 
                 const response = await fetch(apiUrl, {
                     method: "POST",
@@ -91,7 +99,7 @@
 
                 const imageBlob = await response.blob();
                 const imageUrl = URL.createObjectURL(imageBlob);
-                
+
                 resultDiv.innerHTML = `
                     <h3>Result:</h3>
                     <img src="${imageUrl}" alt="Generated image">
@@ -100,7 +108,7 @@
                 `;
 
             } catch (error) {
-                resultDiv.innerHTML = `Error: ${error.message}`;
+                resultDiv.innerHTML = `❌ Error: ${error.message}`;
             }
         }
     </script>
