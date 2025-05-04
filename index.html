@@ -11,12 +11,14 @@
       margin: 0 auto;
       padding: 20px;
       background-color: #f0f0f0;
+      display: flex;
     }
     .container {
       background-color: white;
       padding: 20px;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      flex: 1;
     }
     input, textarea, button {
       width: 100%;
@@ -36,15 +38,26 @@
     small {
       color: gray;
     }
+    .tab-container {
+      width: 2in; /* Set width to 2 inches */
+      background-color: #ffffff;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      margin-left: 20px;
+    }
+    .tab-container input {
+      width: 100%;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>VOC Text to Image Generator (Free)</h1>
 
-    <!-- ✅ API Key Input Field -->
+    <!-- API Key Input Field -->
     <label for="apiKey">Enter Your HuggingFace API Key (Optional):</label>
-    <input type="text" id="apiKey" placeholder="Leave blank to use default VOC key">
+    <input type="text" id="apiKey" placeholder="Leave blank to use default API key (VOC Key)">
     <small>We recommend using your own key if you're getting 'rate limit' errors.</small>
 
     <label for="prompt">Prompt:</label>
@@ -60,9 +73,14 @@
     </div>
   </div>
 
+  <div class="tab-container">
+    <h3>API Key List</h3>
+    <input type="text" value="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" readonly />
+  </div>
+
   <script>
     async function generateImage() {
-      const defaultApiKey = "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";  // ✅ آپ کی default API key
+      const defaultApiKey = "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";  // ✅ Default API key
       const userApiKey = document.getElementById('apiKey').value.trim();
       const apiKey = userApiKey !== "" ? userApiKey : defaultApiKey;
 
